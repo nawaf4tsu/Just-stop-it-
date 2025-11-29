@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>45-Day pass</title>
+  <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#317EFB">
+
   <link rel="icon" type="image/x-icon" href="looggg.jpg">
 
   <style>
@@ -141,12 +144,14 @@
       dayDiv.appendChild(label);
       dayDiv.appendChild(checkbox);
       daysList.appendChild(dayDiv);
-    }
+    };
 
     updateProgress();
     
-    
-    
+    //next from here
+    if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js");
+  }
   </script>
 </body>
 </html>
