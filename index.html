@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>45-Day</title>
+  <title>45-Day Challenge – Stop Masturbation</title>
   <link rel="icon" type="image/x-icon" href="looggg">
 
   <style>
@@ -128,7 +128,7 @@
       dayDiv.className = 'day';
     
       const label = document.createElement('label');
-      label.innerHTML=`its day ${i}`;
+      label.innerHTML=its day ${i};
 
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
@@ -147,73 +147,6 @@
     
     
     
-  </script>
-</body>
-</html>    }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: #00ff99;
-      border-radius: 25px;
-      transition: width 0.3s ease;
-    }
-    footer {
-      margin-top: auto;
-      text-align: center;
-      opacity: 0.8;
-      font-size: 0.9em;
-    }
-  </style>
-</head>
-<body>
-  <h1>for nothing </h1>
-  <p>Stay strong for 45 days! Mark each day you successfully resist temptation. Track your progress and grow stronger every day.</p>
-  
-  <div class="container">
-    <div class="progress-container">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-    <div id="daysList"></div>
-  </div>
-
-  <footer>Stay disciplined. Every day counts 💪</footer>
-
-  <script>
-    const totalDays = 35;
-    const daysList = document.getElementById('daysList');
-    const progressBar = document.getElementById('progressBar');
-
-    // Load saved progress
-    const savedProgress = JSON.parse(localStorage.getItem('nofapProgress')) || Array(totalDays).fill(false);
-
-    function updateProgress() {
-      const completed = savedProgress.filter(Boolean).length;
-      const percent = (completed / totalDays) * 100;
-      progressBar.style.width = percent + '%';
-      localStorage.setItem('nofapProgress', JSON.stringify(savedProgress));
-    }
-    
-    for (let i = 1; i <= totalDays; i++) {
-      const dayDiv = document.createElement('div');
-      dayDiv.className = 'day';
-    
-      const label = document.createElement('label');
-      label.innerHTML=`its day ${i}`;
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = savedProgress[i];
-      checkbox.addEventListener('change', () => {
-        savedProgress[i] = checkbox.checked;
-        updateProgress();
-      });
-
-      dayDiv.appendChild(label);
-      dayDiv.appendChild(checkbox);
-      daysList.appendChild(dayDiv);
-    }
-
-    updateProgress();
   </script>
 </body>
 </html>
