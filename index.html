@@ -111,7 +111,7 @@
   <footer>Stay disciplined. Every day counts 💪</footer>
 
   <script>
-    const totalDays = 35;
+    const totalDays = 9;
     const daysList = document.getElementById('daysList');
     const progressBar = document.getElementById('progressBar');
 
@@ -131,7 +131,8 @@
       dayDiv.className = 'day';
     
       const label = document.createElement('label');
-      label.innerHTML="Its day"+i;
+      
+      label.innerHTML="Its day"+i+"0";
 
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
