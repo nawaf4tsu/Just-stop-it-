@@ -1,68 +1,593 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reclaim Yourself — Break Free</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Bucket List</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --parchment: #f5efe6;
+    --warm: #c8a96e;
+    --rust: #b85c3a;
+    --sage: #6b8c6e;
+    --cream: #fdf8f0;
+    --shadow: rgba(26,18,8,0.12);
+  }
 
-    :root {
-      --bg: #0a0a0f;
-      --surface: #111118;
-      --card: #16161f;
-      --border: rgba(255,255,255,0.07);
-      --gold: #c9a84c;
-      --gold-light: #f0c96e;
-      --text: #e8e4d9;
-      --muted: #7a7770;
-      --green: #4caf7d;
-      --red: #e05a5a;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(200,169,110,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(107,140,110,0.12) 0%, transparent 50%);
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 56px 24px 32px;
+    position: relative;
+  }
+  header::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--warm), transparent);
+    margin: 20px auto 0;
+  }
+  .tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--warm);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 60px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  h1 span { color: var(--rust); }
+
+  /* STATS */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 24px;
+    margin-bottom: 8px;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rust);
+    display: block;
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--warm);
+    font-weight: 500;
+  }
+
+  /* MAIN LAYOUT */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--cream);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px var(--shadow), 0 1px 0 rgba(255,255,255,0.8) inset;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+
+  .card-header {
+    padding: 20px 28px 16px;
+    border-bottom: 1px solid rgba(200,169,110,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  /* TOGGLE */
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(200,169,110,0.1);
+    border: 1px solid rgba(200,169,110,0.25);
+    border-radius: 100px;
+    padding: 4px 14px 4px 4px;
+  }
+  .toggle-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.5px;
+  }
+  .toggle {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: rgba(200,169,110,0.3);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.25s;
+  }
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    left: 2px; top: 2px;
+    width: 16px; height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.25s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .toggle input:checked + .toggle-track { background: var(--rust); }
+  .toggle input:checked + .toggle-track::after { transform: translateX(16px); }
+  .mode-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--rust);
+    background: rgba(184,92,58,0.1);
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+
+  /* INPUT AREA */
+  .input-section { padding: 20px 28px; }
+  textarea, input[type="text"] {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    background: white;
+    border: 1.5px solid rgba(200,169,110,0.3);
+    border-radius: 10px;
+    padding: 14px 16px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    line-height: 1.6;
+  }
+  textarea:focus, input[type="text"]:focus {
+    border-color: var(--warm);
+    box-shadow: 0 0 0 3px rgba(200,169,110,0.15);
+  }
+  textarea { min-height: 120px; }
+
+  .input-hint {
+    font-size: 12px;
+    color: var(--warm);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .input-hint svg { flex-shrink: 0; }
+
+  .add-btn {
+    margin-top: 12px;
+    width: 100%;
+    padding: 14px;
+    background: var(--rust);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(184,92,58,0.3);
+  }
+  .add-btn:hover { background: #a04f30; box-shadow: 0 6px 20px rgba(184,92,58,0.35); }
+  .add-btn:active { transform: scale(0.98); }
+
+  /* FILTER BAR */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    padding: 0 28px 20px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 6px 16px;
+    border-radius: 100px;
+    border: 1.5px solid rgba(200,169,110,0.3);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--warm);
+    color: white;
+    border-color: var(--warm);
+  }
+
+  /* LIST */
+  .list-section { padding: 0 28px 24px; }
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: rgba(26,18,8,0.35);
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; font-style: italic; }
+
+  .bucket-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(200,169,110,0.15);
+    animation: fadeSlide 0.35s ease both;
+    transition: opacity 0.3s;
+  }
+  .bucket-item:last-child { border-bottom: none; }
+  .bucket-item.done { opacity: 0.55; }
+  .bucket-item.done .item-text { text-decoration: line-through; }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .check-btn {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba(200,169,110,0.5);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    color: transparent;
+    font-size: 12px;
+  }
+  .check-btn:hover { border-color: var(--sage); color: var(--sage); }
+  .bucket-item.done .check-btn {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: white;
+  }
+
+  .item-body { flex: 1; min-width: 0; }
+  .item-text {
+    font-size: 15px;
+    line-height: 1.55;
+    word-break: break-word;
+  }
+  .item-meta {
+    font-size: 11px;
+    color: var(--warm);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .item-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .bucket-item:hover .item-actions { opacity: 1; }
+  .icon-btn {
+    width: 28px; height: 28px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(26,18,8,0.35);
+    transition: all 0.15s;
+    font-size: 14px;
+  }
+  .icon-btn:hover { background: rgba(200,169,110,0.15); color: var(--rust); }
+
+  .item-num {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: rgba(200,169,110,0.6);
+    min-width: 20px;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  /* PROGRESS */
+  .progress-wrap { padding: 0 28px 24px; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: rgba(200,169,110,0.2);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--warm), var(--sage));
+    border-radius: 100px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--ink);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 99;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tagline">✦ Life is Short ✦</div>
+  <h1>My Bucket <span>List</span></h1>
+</header>
+
+<div class="container">
+
+  <!-- INPUT CARD -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Add to the list</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="mode-tag" id="modeTag">Line Mode</span>
+        <div class="toggle-wrap">
+          <label class="toggle">
+            <input type="checkbox" id="modeToggle" checked onchange="toggleMode()">
+            <span class="toggle-track"></span>
+          </label>
+          <span class="toggle-label">One per line</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-section">
+      <textarea id="inputBox" placeholder="• Visit the Northern Lights&#10;• Learn to surf&#10;• Watch a sunrise on a mountaintop" rows="5"></textarea>
+      <div class="input-hint" id="inputHint">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#c8a96e" stroke-width="1.5"/><path d="M8 7v4M8 5v.5" stroke="#c8a96e" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Each line becomes a separate bucket list item
+      </div>
+      <button class="add-btn" onclick="addItems()">✦ Add to Bucket List</button>
+    </div>
+  </div>
+
+  <!-- LIST CARD -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">The Dream Board</div>
+    </div>
+
+    <div class="progress-wrap" id="progressWrap" style="display:none">
+      <div class="progress-label">
+        <span>Progress</span>
+        <span id="progressText">0 / 0 completed</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="filter-bar" id="filterBar" style="display:none">
+      <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" onclick="setFilter('todo', this)">To Do</button>
+      <button class="filter-btn" onclick="setFilter('done', this)">Done ✓</button>
+    </div>
+
+    <div class="list-section">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">✦</div>
+        <p>Your bucket list is waiting to be filled.<br>What do you dream of doing?</p>
+      </div>
+      <div id="itemsList"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat"><span class="stat-num" id="statTotal">0</span><span class="stat-label">Dreams</span></div>
+  <div class="stat"><span class="stat-num" id="statDone">0</span><span class="stat-label">Done</span></div>
+  <div class="stat"><span class="stat-num" id="statLeft">0</span><span class="stat-label">To Go</span></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let items = JSON.parse(localStorage.getItem('bucketList') || '[]');
+  let filter = 'all';
+
+  function toggleMode() {
+    const on = document.getElementById('modeToggle').checked;
+    const box = document.getElementById('inputBox');
+    const hint = document.getElementById('inputHint');
+    const tag = document.getElementById('modeTag');
+    if (on) {
+      box.placeholder = '• Visit the Northern Lights\n• Learn to surf\n• Watch a sunrise on a mountaintop';
+      hint.innerHTML = `<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#c8a96e" stroke-width="1.5"/><path d="M8 7v4M8 5v.5" stroke="#c8a96e" stroke-width="1.5" stroke-linecap="round"/></svg> Each line becomes a separate bucket list item`;
+      tag.textContent = 'Line Mode';
+    } else {
+      box.placeholder = 'Write anything — a whole paragraph, a story, a description of your dream adventure...';
+      hint.innerHTML = `<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#c8a96e" stroke-width="1.5"/><path d="M8 7v4M8 5v.5" stroke="#c8a96e" stroke-width="1.5" stroke-linecap="round"/></svg> Entire text saved as one single item`;
+      tag.textContent = 'Paragraph Mode';
+    }
+  }
+
+  function addItems() {
+    const val = document.getElementById('inputBox').value.trim();
+    if (!val) { showToast('Nothing to add!'); return; }
+
+    const lineMode = document.getElementById('modeToggle').checked;
+    let added = 0;
+
+    if (lineMode) {
+      const lines = val.split('\n').map(l => l.replace(/^[\s•\-\*]+/, '').trim()).filter(Boolean);
+      lines.forEach(text => {
+        items.unshift({ id: Date.now() + Math.random(), text, done: false, date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) });
+        added++;
+      });
+    } else {
+      items.unshift({ id: Date.now(), text: val, done: false, date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) });
+      added = 1;
     }
 
-    html { scroll-behavior: smooth; }
+    save();
+    render();
+    document.getElementById('inputBox').value = '';
+    showToast(added > 1 ? `✦ ${added} dreams added!` : '✦ Dream added!');
+  }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      line-height: 1.7;
-      overflow-x: hidden;
+  function toggleDone(id) {
+    const item = items.find(i => i.id === id);
+    if (item) { item.done = !item.done; save(); render(); }
+  }
+
+  function deleteItem(id) {
+    items = items.filter(i => i.id !== id);
+    save(); render();
+    showToast('Removed from list');
+  }
+
+  function setFilter(f, btn) {
+    filter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  }
+
+  function save() {
+    localStorage.setItem('bucketList', JSON.stringify(items));
+  }
+
+  function render() {
+    const list = document.getElementById('itemsList');
+    const empty = document.getElementById('emptyState');
+    const filterBar = document.getElementById('filterBar');
+    const progressWrap = document.getElementById('progressWrap');
+
+    const total = items.length;
+    const done = items.filter(i => i.done).length;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statDone').textContent = done;
+    document.getElementById('statLeft').textContent = total - done;
+
+    if (total === 0) {
+      empty.style.display = 'block';
+      filterBar.style.display = 'none';
+      progressWrap.style.display = 'none';
+      list.innerHTML = '';
+      return;
     }
 
-    /* NOISE TEXTURE */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.4;
-    }
+    empty.style.display = 'none';
+    filterBar.style.display = 'flex';
+    progressWrap.style.display = 'block';
 
-    /* NAV */
-    nav {
-      position: fixed; top: 0; width: 100%;
-      background: rgba(10,10,15,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem;
-      display: flex; justify-content: space-between; align-items: center;
-      z-index: 100;
-    }
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      color: var(--gold);
-      letter-spacing: 0.05em;
-    }
-    .nav-links { display: flex; gap: 2rem; }
-    .nav-links a {
-      color: var(--muted); text-decoration: none;
-      font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `${done} / ${total} completed`;
+
+    const filtered = filter === 'all' ? items : filter === 'done' ? items.filter(i => i.done) : items.filter(i => !i.done);
+
+    list.innerHTML = filtered.map((item, idx) => `
+      <div class="bucket-item ${item.done ? 'done' : ''}" id="item-${item.id}">
+        <span class="item-num">${String(idx+1).padStart(2,'0')}</span>
+        <button class="check-btn" onclick="toggleDone(${item.id})" title="Mark done">✓</button>
+        <div class="item-body">
+          <div class="item-text">${escHtml(item.text)}</div>
+          <div class="item-meta">Added ${item.date}</div>
+        </div>
+        <div class="item-actions">
+          <button class="icon-btn" onclick="deleteItem(${item.id})" title="Delete">✕</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // Enter key in line mode submits
+  document.getElementById('inputBox').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.ctrlKey) { e.preventDefault(); addItems(); }
+  });
+
+  render();
+</script>
+</body>
+</html>
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--text); }
